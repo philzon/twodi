@@ -1,0 +1,16 @@
+name: CI
+
+on: [push]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run actions/checkout@v1
+      uses: actions/checkout@v1
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install libsdl2-dev
+    - name: Compile sources
+      run: make clean all
