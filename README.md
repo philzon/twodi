@@ -1,5 +1,7 @@
 # Twodi
 
+![CI](https://github.com/philzon/twodi/workflows/CI/badge.svg?branch=master)
+
 A 2D game engine implementation using SDL2.
 
 # Build
