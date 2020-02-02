@@ -176,13 +176,11 @@ std::string INI::getString(const std::string &section, const std::string &name, 
 
 int INI::getInteger(const std::string &section, const std::string &name, int def)
 {
-	// TODO: unsage function - redo.
-	return std::atoi(getString(section, name, std::to_string(def)).c_str());
+	return std::strtol(getString(section, name, std::to_string(def)).c_str(), NULL, 10);
 }
 
 float INI::getFloat(const std::string &section, const std::string &name, float def)
 {
-	// TODO: unsage function - redo.
 	return std::atof(getString(section, name, std::to_string(def)).c_str());
 }
 
