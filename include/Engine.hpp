@@ -2,6 +2,7 @@
 #define ENGINE_HPP
 
 // STD.
+#include <iostream>
 #include <vector>
 #include <string>
 

@@ -151,6 +151,12 @@ void Engine::configure(const std::string &path)
 {
 	INI ini(path);
 
+	if (!ini.getErrors().empty())
+	{
+		std::cout << "Config contains errors: " << path << "\n";
+		std::cout << ini.getErrors();
+	}
+
 	mWindowWidth = ini.getInteger("WINDOW", "iWidth", mWindowWidth);
 	mWindowHeight = ini.getInteger("WINDOW", "iHeight", mWindowHeight);
 
