@@ -13,11 +13,14 @@ INI::~INI()
 
 void INI::clear()
 {
+	mErrors.clear();
 	mSections.clear();
 }
 
 bool INI::load(const std::string& path)
 {
+	clear();
+
 	std::ifstream stream(path);
 
 	if (!stream.is_open())
@@ -90,8 +93,11 @@ bool INI::parse(const std::vector<std::string> &data)
 {
 	std::string section, name, value;
 
-	for (std::string line : data)
+	// for (std::string line : data)
+	for (std::size_t i = 0; i < data.size(); ++i)
 	{
+		std::string line = data.at(i);
+
 		// Trim whitespace at the beginning until there are none left.
 		while (!line.empty() && isspace(line.at(0)))
 			line.erase(line.begin());
@@ -105,17 +111,18 @@ bool INI::parse(const std::vector<std::string> &data)
 
 		if (line.at(0) == '[')
 		{
-			// TODO: better parsing of issues.
 			if (line.at(line.size() - 1) == ']')
 				section = line.substr(1, line.size() - 2);
+			else
+				mErrors += std::string("Line " + std::to_string(i + 1) + " could not parse section\n");
 		}
 		else
 		{
 			int state = 0;
 
-			for (std::size_t i = 0; i < line.size(); ++i)
+			for (std::size_t j = 0; j < line.size(); ++j)
 			{
-				char c = line.at(i);
+				char c = line.at(j);
 
 				if (state == 0)
 				{
@@ -135,9 +142,8 @@ bool INI::parse(const std::vector<std::string> &data)
 						}
 						else
 						{
-							// Invalid character - abort key parsing.
-							// TODO: report error.
 							name = "";
+							mErrors += std::string("Line " + std::to_string(i + 1) + " contained an invalid character '" + c + "'\n");
 							break;
 						}
 					}
@@ -157,6 +163,11 @@ bool INI::parse(const std::vector<std::string> &data)
 	}
 
 	return true;
+}
+
+std::string INI::getErrors() const
+{
+	return mErrors;
 }
 
 std::string INI::getString(const std::string &section, const std::string &name, const std::string &def)

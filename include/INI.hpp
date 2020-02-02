@@ -22,6 +22,8 @@ public:
 	bool parse(const std::vector<char> &data);
 	bool parse(const std::vector<std::string> &lines);
 
+	std::string getErrors() const;
+
 	std::string getString(const std::string &section, const std::string &name, const std::string &def);
 	int getInteger(const std::string &section, const std::string &name, int def);
 	float getFloat(const std::string &section, const std::string &name, float def);
@@ -33,6 +35,7 @@ public:
 	void setValue(const std::string &section, const std::string &name, bool value);
 
 protected:
+	std::string mErrors;
 	std::unordered_map<std::string, std::unordered_map<std::string, std::string>> mSections;
 };
 
