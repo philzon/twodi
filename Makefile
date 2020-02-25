@@ -25,7 +25,7 @@ all: build resources
 
 clean:
 	@rm -rf $(BINDIR)
-	@rm -f $(OBJDIR)/*.o
+	@rm -rf $(OBJDIR)
 
 build: pre $(BINDIR)/$(TITLE)
 
