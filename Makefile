@@ -12,7 +12,7 @@ CFLAGS  := -std=c++11 \
            -DBUILD_BUILD='"$(BUILD)"' \
            -DBUILD_COMMIT='"$(COMMIT)"' \
            -DBUILD_BRANCH='"$(BRANCH)"' \
-		   -DBUILD_DATE='"$(DATE)"' \
+           -DBUILD_DATE='"$(DATE)"' \
            -g
 LIBS    := -lSDL2main -lSDL2
 
