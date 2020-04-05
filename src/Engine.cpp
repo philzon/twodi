@@ -9,6 +9,7 @@ Engine::Engine(const std::vector<std::string> &args)
 	mSDLWindow = nullptr;
 	mSDLRenderer = nullptr;
 
+	mWindowTitle = WINDOW_TITLE;
 	mWindowPosition = WINDOW_POSITION;
 	mWindowWidth = WINDOW_WIDTH;
 	mWindowHeight = WINDOW_HEIGHT;
@@ -25,7 +26,7 @@ Engine::Engine(const std::vector<std::string> &args)
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	mSDLWindow = SDL_CreateWindow(BUILD_TITLE,
+	mSDLWindow = SDL_CreateWindow(mWindowTitle.c_str(),
 		mWindowPosition,
 		mWindowPosition,
 		mWindowWidth,
@@ -104,7 +105,7 @@ int Engine::run()
 
 				SDL_GetWindowSize(mSDLWindow, &width, &height);
 
-				std::string title = std::string(BUILD_TITLE) \
+				mWindowTitle = std::string(BUILD_TITLE) \
 					+ std::string(" ") \
 					+ std::string(BUILD_VERSION) \
 					+ std::string("-") \
@@ -125,7 +126,7 @@ int Engine::run()
 					+ std::to_string(mTick) \
 					+ std::string(" Tick");
 
-				SDL_SetWindowTitle(mSDLWindow, title.c_str());
+				SDL_SetWindowTitle(mSDLWindow, mWindowTitle.c_str());
 			}
 
 			mFPS = 0;

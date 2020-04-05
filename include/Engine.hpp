@@ -32,6 +32,7 @@
 #endif
 
 // Window default constants.
+#define WINDOW_TITLE BUILD_TITLE
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define WINDOW_POSITION SDL_WINDOWPOS_CENTERED
@@ -66,6 +67,7 @@ private:
 	SDL_Event mEvent;
 
 	// Flags and configuration values.
+	std::string mWindowTitle;
 	int mWindowPosition;
 	int mWindowWidth;
 	int mWindowHeight;
