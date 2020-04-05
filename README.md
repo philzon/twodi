@@ -1,6 +1,8 @@
 # Twodi
 
-![CI](https://github.com/philzon/twodi/workflows/CI/badge.svg?branch=master)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/philzon/twodi/CI?style=flat-square)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/philzon/twodi?style=flat-square)
+![GitHub](https://img.shields.io/github/license/philzon/twodi?style=flat-square)
 
 A 2D game engine implementation using SDL2.
 
