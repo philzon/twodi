@@ -15,6 +15,14 @@ A 2D game engine implementation using SDL2.
 * G++
 * SDL2
 
+Ubuntu/Debian:
+
+```txt
+# apt-get install libsdl2-dev
+```
+
+## Building
+
 To build the project, execute the following command:
 
 ```txt
