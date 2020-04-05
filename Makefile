@@ -8,6 +8,7 @@ DATE    := $(shell date +"%Y-%m-%d %H:%M:%S")
 CC      := g++
 CFLAGS  := -std=c++11 \
            -O0 \
+		   -Wall \
            -g \
            -DBUILD_TITLE='"$(TITLE)"' \
            -DBUILD_VERSION='"$(VERSION)"' \
