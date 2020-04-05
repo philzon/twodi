@@ -3,6 +3,7 @@
 
 // STD.
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -10,7 +11,9 @@
 #include <SDL2/SDL.h>
 
 // Engine.
+#include "Log.hpp"
 #include "INI.hpp"
+#include "Utility.hpp"
 
 #ifndef BUILD_TITLE
 #define BUILD_TITLE "app"
@@ -76,8 +79,12 @@ private:
 	int mRenderingIndex;
 	unsigned int mRenderingContext;
 
+	INI mIni;
+
 	bool mFramelock;
 	bool mDebug;
+
+	std::shared_ptr<Log> mLog;
 };
 
 #endif // ENGINE_HPP

@@ -2,6 +2,18 @@
 
 Engine::Engine(const std::vector<std::string> &args)
 {
+	mLog = Log::getInstance();
+	mLog->info("Starting application: "
+		+ std::string(BUILD_TITLE)
+		+ " "
+		+ std::string(BUILD_VERSION)
+		+ " ("
+		+ std::string(BUILD_COMMIT)
+		+ ")");
+	mLog->info("");
+
+	mIni.clear();
+
 	mFPS = 0;
 	mTPS = 0;
 	mTick = 0;
@@ -32,15 +44,40 @@ Engine::Engine(const std::vector<std::string> &args)
 		mWindowWidth,
 		mWindowHeight,
 		mWindowStates);
+
+	mLog->info("");
+	mLog->info("Created window (" + hex(mSDLWindow) + ")");
+
 	mSDLRenderer = SDL_CreateRenderer(mSDLWindow,
 		mRenderingIndex,
 		mRenderingContext);
+
+	mLog->info("Created renderer (" + hex(mSDLRenderer) + ")");
+
+	mLog->info("");
+	mLog->info("== Window ==================");
+	mLog->info("   Fullscreen  " + mIni.getString("WINDOW", "bFullscreen", "false"));
+	mLog->info("   Borderless  " + mIni.getString("WINDOW", "bBorderless", "false"));
+	mLog->info("   Resizeable  " + mIni.getString("WINDOW", "bResizeable", "false"));
+	mLog->info("   Size        " + std::to_string(mWindowWidth) + "x" + std::to_string(mWindowHeight));
+	mLog->info("== Renderer ================");
+	mLog->info("   Vsync       " + mIni.getString("RENDERER", "bVsync", "false"));
+	mLog->info("   Software    " + mIni.getString("RENDERER", "bSoftware", "false"));
+	mLog->info("   Framelock   " + mIni.getString("RENDERER", "bFramelock", "false"));
+	mLog->info("== Engine ==================");
+	mLog->info("   Debug       " + mIni.getString("ENGINE", "bDebug", "false"));
+	mLog->info("");
 }
 
 Engine::~Engine()
 {
+	mLog->info("Destroying renderer (" + hex(mSDLRenderer) + ")");
 	SDL_DestroyRenderer(mSDLRenderer);
+
+	mLog->info("Destroying window (" + hex(mSDLWindow) + ")");
 	SDL_DestroyWindow(mSDLWindow);
+
+	mLog->info("Destroying SDL");
 	SDL_Quit();
 }
 
@@ -61,6 +98,9 @@ int Engine::run()
 			{
 			case SDL_QUIT:
 				running = false;
+				mLog->info("");
+				mLog->info("QUIT event triggered");
+				mLog->info("");
 				break;
 			}
 		}
@@ -150,20 +190,22 @@ void Engine::parse(const std::vector<std::string> &args)
 
 void Engine::configure(const std::string &path)
 {
-	INI ini(path);
+	mLog->info("Loading " + path + " ...");
 
-	if (!ini.getErrors().empty())
+	mIni.load(path);
+
+	if (!mIni.getErrors().empty())
 	{
 		std::cout << "Config contains errors: " << path << "\n";
-		std::cout << ini.getErrors();
+		std::cout << mIni.getErrors();
 	}
 
-	mWindowWidth = ini.getInteger("WINDOW", "iWidth", mWindowWidth);
-	mWindowHeight = ini.getInteger("WINDOW", "iHeight", mWindowHeight);
+	mWindowWidth = mIni.getInteger("WINDOW", "iWidth", mWindowWidth);
+	mWindowHeight = mIni.getInteger("WINDOW", "iHeight", mWindowHeight);
 
-	bool fullscreen = ini.getBoolean("WINDOW", "bFullscreen", false);
-	bool borderless = ini.getBoolean("WINDOW", "bBorderless", false);
-	bool resizeable = ini.getBoolean("WINDOW", "bResizeable", false);
+	bool fullscreen = mIni.getBoolean("WINDOW", "bFullscreen", false);
+	bool borderless = mIni.getBoolean("WINDOW", "bBorderless", false);
+	bool resizeable = mIni.getBoolean("WINDOW", "bResizeable", false);
 
 	if (fullscreen)
 		mWindowStates |= SDL_WINDOW_FULLSCREEN;
@@ -172,14 +214,14 @@ void Engine::configure(const std::string &path)
 	if (resizeable)
 		mWindowStates |= SDL_WINDOW_RESIZABLE;
 
-	bool vsync = ini.getBoolean("RENDERER", "bVsync", false);
-	bool software = ini.getBoolean("RENDERER", "bSoftware", false);
-	mFramelock = ini.getBoolean("RENDERER", "bFramelock", mFramelock);
+	bool vsync = mIni.getBoolean("RENDERER", "bVsync", false);
+	bool software = mIni.getBoolean("RENDERER", "bSoftware", false);
+	mFramelock = mIni.getBoolean("RENDERER", "bFramelock", mFramelock);
 
 	if (vsync)
 		mRenderingContext |= SDL_RENDERER_PRESENTVSYNC;
 	if (software)
 		mRenderingContext |= SDL_RENDERER_SOFTWARE;
 
-	mDebug = ini.getBoolean("ENGINE", "bDebug", mDebug);
+	mDebug = mIni.getBoolean("ENGINE", "bDebug", mDebug);
 }
