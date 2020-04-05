@@ -140,11 +140,6 @@ int Engine::run()
 			// Refresh debug title each second.
 			if (mDebug)
 			{
-				int width = 0;
-				int height = 0;
-
-				SDL_GetWindowSize(mSDLWindow, &width, &height);
-
 				mWindowTitle = std::string(BUILD_TITLE) \
 					+ std::string(" ") \
 					+ std::string(BUILD_VERSION) \
@@ -155,9 +150,9 @@ int Engine::run()
 					+ std::string(" -> ") \
 					+ std::string(BUILD_BRANCH) \
 					+ std::string(") | ") \
-					+ std::to_string(width) \
+					+ std::to_string(mWindowWidth) \
 					+ std::string("x") \
-					+ std::to_string(height) \
+					+ std::to_string(mWindowHeight) \
 					+ std::string(" | ") \
 					+ std::to_string(mFPS) \
 					+ std::string(" FPS | ") \
