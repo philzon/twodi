@@ -1,6 +1,6 @@
 TITLE   := twodi
 VERSION := 0.1.0
-NUMBER  := $(shell ./script/build-id.sh)
+BUILD   := $(shell ./script/build-id.sh)
 COMMIT  := $(shell git rev-parse --short HEAD)
 BRANCH  := $(shell git rev-parse --abbrev-ref HEAD)
 DATE    := $(shell date +"%Y-%m-%d %H:%M:%S")
@@ -9,7 +9,7 @@ CC      := g++
 CFLAGS  := -std=c++11 \
            -DBUILD_TITLE='"$(TITLE)"' \
            -DBUILD_VERSION='"$(VERSION)"' \
-           -DBUILD_NUMBER='"$(NUMBER)"' \
+           -DBUILD_BUILD='"$(BUILD)"' \
            -DBUILD_COMMIT='"$(COMMIT)"' \
            -DBUILD_BRANCH='"$(BRANCH)"' \
 		   -DBUILD_DATE='"$(DATE)"' \
@@ -49,4 +49,4 @@ $(BINDIR)/$(TITLE): $(OBJECTS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@$(CC) $(CFLAGS) -I $(INCDIR) -c -o $@ $<
-	@echo "CC    $@"
+	@echo "CC  $@"

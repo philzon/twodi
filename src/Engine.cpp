@@ -73,9 +73,9 @@ int Engine::run()
 			unprocessed -= 1.0f;
 			shouldRender = true;
 			shouldUpdate = true;
-		
+
 			// Perform logic operations here ...
-		
+
 			++mTick;
 			++mTPS;
 		}
@@ -85,7 +85,7 @@ int Engine::run()
 			SDL_RenderClear(mSDLRenderer);
 			SDL_SetRenderDrawColor(mSDLRenderer, 0, 0, 0, 255);
 			SDL_RenderFillRect(mSDLRenderer, NULL);
-			
+
 			// Perform rendering operations here ...
 
 			SDL_RenderPresent(mSDLRenderer);
@@ -108,7 +108,7 @@ int Engine::run()
 					+ std::string(" ") \
 					+ std::string(BUILD_VERSION) \
 					+ std::string("-") \
-					+ std::string(BUILD_NUMBER) \
+					+ std::string(BUILD_BUILD) \
 					+ std::string(" (") \
 					+ std::string(BUILD_COMMIT) \
 					+ std::string(" -> ") \

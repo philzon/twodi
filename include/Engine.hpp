@@ -13,7 +13,7 @@
 #include "INI.hpp"
 
 #ifndef BUILD_TITLE
-#define BUILD_TITLE "engine"
+#define BUILD_TITLE "app"
 #endif
 #ifndef BUILD_VERSION
 #define BUILD_VERSION "0.0.0"
@@ -24,8 +24,8 @@
 #ifndef BUILD_BRANCH
 #define BUILD_BRANCH "None"
 #endif
-#ifndef BUILD_NUMBER
-#define BUILD_NUMBER "0"
+#ifndef BUILD_BUILD
+#define BUILD_BUILD "0"
 #endif
 #ifndef BUILD_DATE
 #define BUILD_DATE "1970-01-01 00:00:00"
