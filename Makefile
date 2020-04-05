@@ -7,13 +7,14 @@ DATE    := $(shell date +"%Y-%m-%d %H:%M:%S")
 
 CC      := g++
 CFLAGS  := -std=c++11 \
+           -O0 \
+           -g \
            -DBUILD_TITLE='"$(TITLE)"' \
            -DBUILD_VERSION='"$(VERSION)"' \
            -DBUILD_BUILD='"$(BUILD)"' \
            -DBUILD_COMMIT='"$(COMMIT)"' \
            -DBUILD_BRANCH='"$(BRANCH)"' \
-           -DBUILD_DATE='"$(DATE)"' \
-           -g
+           -DBUILD_DATE='"$(DATE)"'
 LIBS    := -lSDL2main -lSDL2
 
 BINDIR  := bin
