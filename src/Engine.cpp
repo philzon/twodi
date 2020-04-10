@@ -18,48 +18,21 @@ Engine::Engine(const std::vector<std::string> &args)
 	mTPS = 0;
 	mTick = 0;
 
-	mSDLWindow = nullptr;
-	mSDLRenderer = nullptr;
-
-	mWindowTitle = WINDOW_TITLE;
-	mWindowPosition = WINDOW_POSITION;
-	mWindowWidth = WINDOW_WIDTH;
-	mWindowHeight = WINDOW_HEIGHT;
-	mWindowStates = WINDOW_STATES;
-
-	mRenderingIndex = RENDERER_INDEX;
-	mRenderingContext = RENDERER_CONTEXT;
 	mFramelock = true;
-
 	mDebug = false;
 
 	configure("config.ini");
 	parse(args);
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-
-	mSDLWindow = SDL_CreateWindow(mWindowTitle.c_str(),
-		mWindowPosition,
-		mWindowPosition,
-		mWindowWidth,
-		mWindowHeight,
-		mWindowStates);
-
-	mLog->info("");
-	mLog->info("Created window (" + hex(mSDLWindow) + ")");
-
-	mSDLRenderer = SDL_CreateRenderer(mSDLWindow,
-		mRenderingIndex,
-		mRenderingContext);
-
-	mLog->info("Created renderer (" + hex(mSDLRenderer) + ")");
+	mWindow.setTitle(BUILD_TITLE);
 
 	mLog->info("");
 	mLog->info("== Window ==================");
 	mLog->info("   Fullscreen  " + mIni.getString("WINDOW", "bFullscreen", "false"));
 	mLog->info("   Borderless  " + mIni.getString("WINDOW", "bBorderless", "false"));
 	mLog->info("   Resizeable  " + mIni.getString("WINDOW", "bResizeable", "false"));
-	mLog->info("   Size        " + std::to_string(mWindowWidth) + "x" + std::to_string(mWindowHeight));
+	mLog->info("   Width       " + mIni.getString("WINDOW", "iWidth", "800"));
+	mLog->info("   height      " + mIni.getString("WINDOW", "iHeight", "600"));
 	mLog->info("== Renderer ================");
 	mLog->info("   Vsync       " + mIni.getString("RENDERER", "bVsync", "false"));
 	mLog->info("   Software    " + mIni.getString("RENDERER", "bSoftware", "false"));
@@ -70,24 +43,14 @@ Engine::Engine(const std::vector<std::string> &args)
 }
 
 Engine::~Engine()
-{
-	mLog->info("Destroying renderer (" + hex(mSDLRenderer) + ")");
-	SDL_DestroyRenderer(mSDLRenderer);
-
-	mLog->info("Destroying window (" + hex(mSDLWindow) + ")");
-	SDL_DestroyWindow(mSDLWindow);
-
-	mLog->info("Destroying SDL");
-	SDL_Quit();
-}
+{}
 
 int Engine::run()
 {
 	unsigned int last = 0;
 	double unprocessed = 0.0f;
-	bool running = true;
 
-	while (running)
+	while (mWindow.isOpen())
 	{
 		unprocessed += (SDL_GetTicks() - last) / (1000.0f / ENGINE_TPS);
 		last = SDL_GetTicks();
@@ -97,7 +60,7 @@ int Engine::run()
 			switch (mEvent.type)
 			{
 			case SDL_QUIT:
-				running = false;
+				mWindow.close();
 				mLog->info("");
 				mLog->info("QUIT event triggered");
 				mLog->info("");
@@ -123,13 +86,11 @@ int Engine::run()
 
 		if (shouldRender)
 		{
-			SDL_RenderClear(mSDLRenderer);
-			SDL_SetRenderDrawColor(mSDLRenderer, 0, 0, 0, 255);
-			SDL_RenderFillRect(mSDLRenderer, NULL);
+			mWindow.clear();
 
-			// Perform rendering operations here ...
+			// Perform graphics operation here ...
 
-			SDL_RenderPresent(mSDLRenderer);
+			mWindow.display();
 
 			++mFPS;
 		}
@@ -140,7 +101,7 @@ int Engine::run()
 			// Refresh debug title each second.
 			if (mDebug)
 			{
-				mWindowTitle = std::string(BUILD_TITLE) \
+				std::string title = std::string(BUILD_TITLE) \
 					+ std::string(" ") \
 					+ std::string(BUILD_VERSION) \
 					+ std::string("-") \
@@ -150,9 +111,9 @@ int Engine::run()
 					+ std::string(" -> ") \
 					+ std::string(BUILD_BRANCH) \
 					+ std::string(") | ") \
-					+ std::to_string(mWindowWidth) \
+					+ std::to_string(mWindow.getWidth()) \
 					+ std::string("x") \
-					+ std::to_string(mWindowHeight) \
+					+ std::to_string(mWindow.getHeight()) \
 					+ std::string(" | ") \
 					+ std::to_string(mFPS) \
 					+ std::string(" FPS | ") \
@@ -161,7 +122,7 @@ int Engine::run()
 					+ std::to_string(mTick) \
 					+ std::string(" Tick");
 
-				SDL_SetWindowTitle(mSDLWindow, mWindowTitle.c_str());
+				mWindow.setTitle(title);
 			}
 
 			mFPS = 0;
@@ -195,28 +156,20 @@ void Engine::configure(const std::string &path)
 		std::cout << mIni.getErrors();
 	}
 
-	mWindowWidth = mIni.getInteger("WINDOW", "iWidth", mWindowWidth);
-	mWindowHeight = mIni.getInteger("WINDOW", "iHeight", mWindowHeight);
-
+	int width = mIni.getInteger("WINDOW", "iWidth", 800);
+	int height = mIni.getInteger("WINDOW", "iHeight", 600);
 	bool fullscreen = mIni.getBoolean("WINDOW", "bFullscreen", false);
 	bool borderless = mIni.getBoolean("WINDOW", "bBorderless", false);
 	bool resizeable = mIni.getBoolean("WINDOW", "bResizeable", false);
 
-	if (fullscreen)
-		mWindowStates |= SDL_WINDOW_FULLSCREEN;
-	if (borderless)
-		mWindowStates |= SDL_WINDOW_BORDERLESS;
-	if (resizeable)
-		mWindowStates |= SDL_WINDOW_RESIZABLE;
-
 	bool vsync = mIni.getBoolean("RENDERER", "bVsync", false);
-	bool software = mIni.getBoolean("RENDERER", "bSoftware", false);
+	// bool software = mIni.getBoolean("RENDERER", "bSoftware", false);
 	mFramelock = mIni.getBoolean("RENDERER", "bFramelock", mFramelock);
 
-	if (vsync)
-		mRenderingContext |= SDL_RENDERER_PRESENTVSYNC;
-	if (software)
-		mRenderingContext |= SDL_RENDERER_SOFTWARE;
-
 	mDebug = mIni.getBoolean("ENGINE", "bDebug", mDebug);
+
+	mWindow.setSize(width, height);
+	mWindow.setFullscreen(fullscreen, borderless);
+	mWindow.setResizeable(resizeable);
+	mWindow.setVsync(vsync);
 }

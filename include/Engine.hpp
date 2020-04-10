@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 
 // Engine.
+#include "Window.hpp"
 #include "Log.hpp"
 #include "INI.hpp"
 #include "Utility.hpp"
@@ -34,17 +35,6 @@
 #define BUILD_DATE "1970-01-01 00:00:00"
 #endif
 
-// Window default constants.
-#define WINDOW_TITLE BUILD_TITLE
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-#define WINDOW_POSITION SDL_WINDOWPOS_CENTERED
-#define WINDOW_STATES SDL_WINDOW_SHOWN
-
-// Renderer default constants.
-#define RENDERER_INDEX -1
-#define RENDERER_CONTEXT SDL_RENDERER_ACCELERATED
-
 // Engine default constants.
 #define ENGINE_TPS 60.0f
 
@@ -64,20 +54,8 @@ private:
 	unsigned int mFPS;
 	unsigned int mTPS;
 
-	// SDL systems.
-	SDL_Window *mSDLWindow;
-	SDL_Renderer *mSDLRenderer;
+	Window mWindow;
 	SDL_Event mEvent;
-
-	// Flags and configuration values.
-	std::string mWindowTitle;
-	int mWindowPosition;
-	int mWindowWidth;
-	int mWindowHeight;
-	unsigned int mWindowStates;
-
-	int mRenderingIndex;
-	unsigned int mRenderingContext;
 
 	INI mIni;
 
