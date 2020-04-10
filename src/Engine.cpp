@@ -61,9 +61,7 @@ int Engine::run()
 			{
 			case SDL_QUIT:
 				mWindow.close();
-				mLog->info("");
 				mLog->info("QUIT event triggered");
-				mLog->info("");
 				break;
 			}
 		}
