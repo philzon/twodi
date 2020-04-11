@@ -63,6 +63,17 @@ int Engine::run()
 				mWindow.close();
 				mLog->info("QUIT event triggered");
 				break;
+			case SDL_WINDOWEVENT:
+				switch (mEvent.window.event)
+				{
+				case SDL_WINDOWEVENT_RESIZED:
+					mLog->info("Window resized to "
+						+ std::to_string(mEvent.window.data1)
+						+ "x"
+						+ std::to_string(mEvent.window.data2));
+					break;
+
+				}
 			}
 		}
 
