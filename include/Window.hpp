@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 
 #include "Drawable.hpp"
+#include "Camera.hpp"
 
 // Window default constants.
 #define WINDOW_TITLE      ""
@@ -32,11 +33,13 @@ public:
 	void display();
 
 	// Getters.
+	Camera getCamera() const;
 	int getWidth() const;
 	int getHeight() const;
 	bool isOpen() const;
 
 	// Setters.
+	void setCamera(const Camera &camera);
 	void setFullscreen(bool state, bool desktop);
 	void setResizeable(bool state);
 	void setSize(int width, int height);
@@ -51,6 +54,7 @@ private:
 
 	SDL_Window *mWindow;
 	SDL_Renderer *mRenderer;
+	SDL_Point mCamera;
 };
 
 #endif // WINDOW_HPP

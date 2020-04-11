@@ -9,7 +9,7 @@ public:
 	Drawable();
 	virtual ~Drawable();
 
-	virtual void draw(SDL_Window *window, SDL_Renderer *renderer) const = 0;
+	virtual void draw(SDL_Window *window, SDL_Renderer *renderer, const SDL_Point &camera) const = 0;
 };
 
 #endif // DRAWABLE_HPP

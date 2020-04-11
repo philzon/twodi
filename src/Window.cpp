@@ -19,6 +19,9 @@ Window::Window()
 	mRenderer = SDL_CreateRenderer(mWindow,
 		RENDERER_INDEX,
 		RENDERER_CONTEXT);
+
+	mCamera.x = 0;
+	mCamera.y = 0;
 }
 
 Window::~Window()
@@ -31,7 +34,7 @@ Window::~Window()
 
 void Window::draw(const Drawable &drawable)
 {
-	drawable.draw(mWindow, mRenderer);
+	drawable.draw(mWindow, mRenderer, mCamera);
 }
 
 void Window::close()
@@ -60,6 +63,11 @@ void Window::display()
 // Getters.
 ////////////////////////////////////////////////
 
+Camera Window::getCamera() const
+{
+	return Camera(mCamera.x, mCamera.y);
+}
+
 bool Window::isOpen() const
 {
 	return mIsOpen;
@@ -82,6 +90,12 @@ int Window::getHeight() const
 ////////////////////////////////////////////////
 // Setters.
 ////////////////////////////////////////////////
+
+void Window::setCamera(const Camera &camera)
+{
+	mCamera.x = static_cast<int>(camera.getLeft());
+	mCamera.y = static_cast<int>(camera.getTop());
+}
 
 void Window::setFullscreen(bool state, bool desktop)
 {
