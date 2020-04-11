@@ -5,6 +5,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "Drawable.hpp"
+
 // Window default constants.
 #define WINDOW_TITLE      ""
 #define WINDOW_WIDTH      800
@@ -21,6 +23,8 @@ class Window
 public:
 	Window();
 	virtual ~Window();
+
+	void draw(const Drawable &drawable);
 
 	void close();
 	void clear();

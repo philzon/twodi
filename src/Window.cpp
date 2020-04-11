@@ -29,6 +29,11 @@ Window::~Window()
 	SDL_Quit();
 }
 
+void Window::draw(const Drawable &drawable)
+{
+	drawable.draw(mWindow, mRenderer);
+}
+
 void Window::close()
 {
 	mIsOpen = false;
