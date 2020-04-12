@@ -25,21 +25,6 @@ Engine::Engine(const std::vector<std::string> &args)
 	parse(args);
 
 	mWindow.setTitle(BUILD_TITLE);
-
-	mLog->info("");
-	mLog->info("== Window ==================");
-	mLog->info("   Fullscreen  " + mIni.getString("WINDOW", "bFullscreen", "false"));
-	mLog->info("   Borderless  " + mIni.getString("WINDOW", "bBorderless", "false"));
-	mLog->info("   Resizeable  " + mIni.getString("WINDOW", "bResizeable", "false"));
-	mLog->info("   Width       " + mIni.getString("WINDOW", "iWidth", "800"));
-	mLog->info("   height      " + mIni.getString("WINDOW", "iHeight", "600"));
-	mLog->info("== Renderer ================");
-	mLog->info("   Vsync       " + mIni.getString("RENDERER", "bVsync", "false"));
-	mLog->info("   Software    " + mIni.getString("RENDERER", "bSoftware", "false"));
-	mLog->info("   Framelock   " + mIni.getString("RENDERER", "bFramelock", "false"));
-	mLog->info("== Engine ==================");
-	mLog->info("   Debug       " + mIni.getString("ENGINE", "bDebug", "false"));
-	mLog->info("");
 }
 
 Engine::~Engine()
