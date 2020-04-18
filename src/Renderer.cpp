@@ -1,10 +1,15 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(const Window &window)
+Renderer::Renderer(const Window &window, bool software)
 {
+	int flags = RENDERER_CONTEXT;
+
+	if (software)
+		flags |= SDL_RENDERER_SOFTWARE;
+
 	mRenderer = SDL_CreateRenderer(window.mWindow,
 		RENDERER_INDEX,
-		RENDERER_CONTEXT);
+		flags);
 }
 
 Renderer::~Renderer()

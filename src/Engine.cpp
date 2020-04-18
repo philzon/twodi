@@ -50,7 +50,8 @@ int Engine::run()
 		mIni.getBoolean("WINDOW", "bBorderless", false));
 	window.setResizeable(mIni.getBoolean("WINDOW", "bResizeable", false));
 
-	Renderer renderer(window);
+	Renderer renderer(window,
+		mIni.getBoolean("RENDERER", "bSoftware", false));
 	renderer.setVsync(mIni.getBoolean("RENDERER", "bVsync", false));
 
 	SDL_Event event;

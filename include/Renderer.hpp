@@ -14,7 +14,7 @@
 class Renderer
 {
 public:
-	Renderer(const Window &window);
+	Renderer(const Window &window, bool software);
 	virtual ~Renderer();
 
 	void draw(const Drawable &drawable);
