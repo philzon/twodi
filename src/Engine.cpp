@@ -29,7 +29,7 @@ Engine::Engine(const std::vector<std::string> &args)
 		std::cout << mIni.getErrors();
 	}
 
-	mFramelock = mIni.getBoolean("RENDERER", "bFramelock", true);
+	mFramelock = mIni.getBoolean("ENGINE", "bFramelock", true);
 	mDebug = mIni.getBoolean("ENGINE", "bDebug", false);
 
 	parse(args);
