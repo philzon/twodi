@@ -25,8 +25,8 @@ Engine::Engine(const std::vector<std::string> &args)
 
 	if (!mIni.getErrors().empty())
 	{
-		std::cout << "Config contains errors: " << CONFIG_PATH << "\n";
-		std::cout << mIni.getErrors();
+		mLog->warning("Config contains errors: " + std::string(CONFIG_PATH));
+		mLog->warning(mIni.getErrors());
 	}
 
 	mFramelock = mIni.getBoolean("ENGINE", "bFramelock", true);
