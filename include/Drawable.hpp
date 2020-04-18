@@ -1,15 +1,16 @@
 #ifndef DRAWABLE_HPP
 #define DRAWABLE_HPP
 
-#include <SDL2/SDL.h>
-
+class Renderer;
 class Drawable
 {
 public:
+	friend class Renderer;
+
 	Drawable();
 	virtual ~Drawable();
 
-	virtual void draw(SDL_Window *window, SDL_Renderer *renderer, const SDL_Point &camera) const = 0;
+	virtual void draw(const Renderer &renderer) const = 0;
 };
 
 #endif // DRAWABLE_HPP

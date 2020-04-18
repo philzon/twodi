@@ -11,10 +11,11 @@
 #include <SDL2/SDL.h>
 
 // Engine.
-#include "Window.hpp"
 #include "Log.hpp"
 #include "INI.hpp"
+#include "Renderer.hpp"
 #include "Utility.hpp"
+#include "Window.hpp"
 
 #ifndef BUILD_TITLE
 #define BUILD_TITLE "app"
@@ -35,6 +36,8 @@
 #define BUILD_DATE "1970-01-01 00:00:00"
 #endif
 
+#define CONFIG_PATH "config.ini"
+
 // Engine default constants.
 #define ENGINE_TPS 60.0f
 
@@ -47,15 +50,11 @@ public:
 	int run();
 
 private:
-	void configure(const std::string &pasth);
 	void parse(const std::vector<std::string> &args);
 
 	unsigned int mTick;
 	unsigned int mFPS;
 	unsigned int mTPS;
-
-	Window mWindow;
-	SDL_Event mEvent;
 
 	INI mIni;
 

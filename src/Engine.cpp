@@ -2,6 +2,8 @@
 
 Engine::Engine(const std::vector<std::string> &args)
 {
+	SDL_Init(SDL_INIT_EVERYTHING);
+
 	mLog = Log::getInstance();
 	mLog->info("Starting application: "
 		+ std::string(BUILD_TITLE)
@@ -12,50 +14,71 @@ Engine::Engine(const std::vector<std::string> &args)
 		+ ")");
 	mLog->info("");
 
-	mIni.clear();
-
 	mFPS = 0;
 	mTPS = 0;
 	mTick = 0;
 
-	mFramelock = true;
-	mDebug = false;
+	if (mIni.load(CONFIG_PATH))
+		mLog->info("Loaded " + std::string(CONFIG_PATH));
+	else
+		mLog->info("Could not load " + std::string(CONFIG_PATH));
 
-	configure("config.ini");
+	if (!mIni.getErrors().empty())
+	{
+		std::cout << "Config contains errors: " << CONFIG_PATH << "\n";
+		std::cout << mIni.getErrors();
+	}
+
+	mFramelock = mIni.getBoolean("RENDERER", "bFramelock", true);
+	mDebug = mIni.getBoolean("ENGINE", "bDebug", false);
+
 	parse(args);
-
-	mWindow.setTitle(BUILD_TITLE);
 }
 
 Engine::~Engine()
-{}
+{
+	SDL_Quit();
+}
 
 int Engine::run()
 {
+	Window window;
+	window.setTitle(BUILD_TITLE);
+	window.setSize(mIni.getInteger("WINDOW", "iWidth", 800),
+		mIni.getInteger("WINDOW", "iHeight", 600));
+	window.setFullscreen(mIni.getBoolean("WINDOW", "bFullscreen", false),
+		mIni.getBoolean("WINDOW", "bBorderless", false));
+	window.setResizeable(mIni.getBoolean("WINDOW", "bResizeable", false));
+
+	Renderer renderer(window);
+	renderer.setVsync(mIni.getBoolean("RENDERER", "bVsync", false));
+
+	SDL_Event event;
+
 	unsigned int last = 0;
 	double unprocessed = 0.0f;
 
-	while (mWindow.isOpen())
+	while (window.isOpen())
 	{
 		unprocessed += (SDL_GetTicks() - last) / (1000.0f / ENGINE_TPS);
 		last = SDL_GetTicks();
 
-		while (SDL_PollEvent(&mEvent))
+		while (SDL_PollEvent(&event))
 		{
-			switch (mEvent.type)
+			switch (event.type)
 			{
 			case SDL_QUIT:
-				mWindow.close();
+				window.close();
 				mLog->info("QUIT event triggered");
 				break;
 			case SDL_WINDOWEVENT:
-				switch (mEvent.window.event)
+				switch (event.window.event)
 				{
 				case SDL_WINDOWEVENT_RESIZED:
 					mLog->info("Window resized to "
-						+ std::to_string(mEvent.window.data1)
+						+ std::to_string(event.window.data1)
 						+ "x"
-						+ std::to_string(mEvent.window.data2));
+						+ std::to_string(event.window.data2));
 					break;
 
 				}
@@ -80,11 +103,11 @@ int Engine::run()
 
 		if (shouldRender)
 		{
-			mWindow.clear();
+			renderer.clear();
 
 			// Perform graphics operation here ...
 
-			mWindow.display();
+			renderer.display();
 
 			++mFPS;
 		}
@@ -105,9 +128,9 @@ int Engine::run()
 					+ std::string(" -> ") \
 					+ std::string(BUILD_BRANCH) \
 					+ std::string(") | ") \
-					+ std::to_string(mWindow.getWidth()) \
+					+ std::to_string(window.getWidth()) \
 					+ std::string("x") \
-					+ std::to_string(mWindow.getHeight()) \
+					+ std::to_string(window.getHeight()) \
 					+ std::string(" | ") \
 					+ std::to_string(mFPS) \
 					+ std::string(" FPS | ") \
@@ -116,7 +139,7 @@ int Engine::run()
 					+ std::to_string(mTick) \
 					+ std::string(" Tick");
 
-				mWindow.setTitle(title);
+				window.setTitle(title);
 			}
 
 			mFPS = 0;
@@ -136,34 +159,4 @@ void Engine::parse(const std::vector<std::string> &args)
 		if (flag == "-d" || flag == "--debug")
 			mDebug = true;
 	}
-}
-
-void Engine::configure(const std::string &path)
-{
-	mLog->info("Loading " + path + " ...");
-
-	mIni.load(path);
-
-	if (!mIni.getErrors().empty())
-	{
-		std::cout << "Config contains errors: " << path << "\n";
-		std::cout << mIni.getErrors();
-	}
-
-	int width = mIni.getInteger("WINDOW", "iWidth", 800);
-	int height = mIni.getInteger("WINDOW", "iHeight", 600);
-	bool fullscreen = mIni.getBoolean("WINDOW", "bFullscreen", false);
-	bool borderless = mIni.getBoolean("WINDOW", "bBorderless", false);
-	bool resizeable = mIni.getBoolean("WINDOW", "bResizeable", false);
-
-	bool vsync = mIni.getBoolean("RENDERER", "bVsync", false);
-	// bool software = mIni.getBoolean("RENDERER", "bSoftware", false);
-	mFramelock = mIni.getBoolean("RENDERER", "bFramelock", mFramelock);
-
-	mDebug = mIni.getBoolean("ENGINE", "bDebug", mDebug);
-
-	mWindow.setSize(width, height);
-	mWindow.setFullscreen(fullscreen, borderless);
-	mWindow.setResizeable(resizeable);
-	mWindow.setVsync(vsync);
 }
